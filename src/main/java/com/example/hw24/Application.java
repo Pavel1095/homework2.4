@@ -9,8 +9,10 @@ public class Application {
     public static final int MAX_LOGIN_LENGTH = 20;
     public static final int MAX_PASSWORD_LENGTH = 19;
 
+    public static final String ALLOWED_PATTERN = "^\\w+$";
+
     public static void main(String[] args) {
-        boolean isCorrect = validate("IvanIvanIvanIvanIvan", "12345", "12345");
+        boolean isCorrect = validate("IvanIvanIn)IvanIvan", "12345", "12345");
         System.out.println(isCorrect);
     }
 
@@ -50,15 +52,7 @@ public class Application {
     }
 
     private static boolean containsAnyDisallowedSymbols(String string) {
-        String stringLowerCase = string.toLowerCase();
-        for (int i = 0; i < stringLowerCase.length(); i++) {
-            char c = stringLowerCase.charAt(i);
-            if (!allowedSymbols.contains(String.valueOf(c))) {
-                return true;
-            }
-        }
-        return false;
+        return !string.matches(ALLOWED_PATTERN);
     }
 }
-
 
