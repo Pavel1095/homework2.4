@@ -5,25 +5,41 @@ import com.example.hw24.exceptions.WrongPasswordException;
 
 public class Application {
 
+    public static final String allowedSymbols = "abcdefghijklmnopqrstuvwxyz0123456789_";
+    public static final int MAX_LOGIN_LENGTH = 20;
+    public static final int MAX_PASSWORD_LENGTH = 19;
+
+    public static final String ALLOWED_PATTERN = "^\\w+$";
+
     public static void main(String[] args) {
-
-      boolean isCorrect = validate("Ivan", "12345", "12345");
+        boolean isCorrect = validate("IvanIvanIn)IvanIvan", "12345", "12345");
         System.out.println(isCorrect);
-
     }
 
     public static boolean validate(String login, String password, String confirmPassword) {
         try {
-            if (login.length() > 20) {
+            if (login.length() > MAX_LOGIN_LENGTH) {
                 throw new WrongLoginException();
             }
 
-            if (password.length() > 20) {
+            if (containsAnyDisallowedSymbols(login)) {
+                System.out.println("логин содержит недопустимые символы.");
+                return false;
+            }
+
+            if (password.length() > MAX_PASSWORD_LENGTH) {
                 throw new WrongPasswordException();
             }
 
-            if (!confirmPassword.equals(password))
+            if (containsAnyDisallowedSymbols(password)) {
+                System.out.println("пароль содержит недопустимые символы.");
+                return false;
+            }
+
+            if (!confirmPassword.equals(password)) {
                 throw new WrongPasswordException();
+            }
+
 
         } catch (WrongLoginException e) {
             System.out.println("Слишком длинный логин.");
@@ -34,4 +50,9 @@ public class Application {
         }
         return true;
     }
+
+    private static boolean containsAnyDisallowedSymbols(String string) {
+        return !string.matches(ALLOWED_PATTERN);
+    }
 }
+
